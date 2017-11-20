@@ -1,7 +1,9 @@
 package app.guillen.com.munidenunciasapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,11 +24,16 @@ public class HomeActivity extends AppCompatActivity {
     private TextView txtUsername;
     private TextView txtName;
     private TextView txtEmail;
+    // SharedPreferences
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // init SharedPreferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         txtUsername = (TextView) findViewById(R.id.txtUsername);
         txtName = (TextView) findViewById(R.id.txtName);
@@ -49,11 +56,8 @@ public class HomeActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, android.R.string.ok, android.R.string.cancel);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        if(getIntent().getExtras() != null) {
-            Intent intent = getIntent();
-            Bundle bundle = intent.getExtras();
-            usuario = bundle.getString("username");
-        }
+        usuario = sharedPreferences.getString("username", null);
+
 
         // Set NavigationItemSelectedListener
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -73,6 +77,15 @@ public class HomeActivity extends AppCompatActivity {
                         Intent registro = new Intent(HomeActivity.this,RegisterDenunciaActivity.class);
                         startActivity(registro);
                         break;
+                    case R.id.nav_logout:
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        boolean success = editor
+                                .putString("username", null)
+                                .putBoolean("islogged", false)
+                                .commit();
+                        Intent main = new Intent(HomeActivity.this,MainActivity.class);
+                        startActivity(main);
+                        finish();
                 }
 
                 // Close drawer
@@ -89,6 +102,8 @@ public class HomeActivity extends AppCompatActivity {
         TextView fullnameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.menu_fullname);
         fullnameText.setText(usuario);
         //Toast.makeText(HomeActivity.this,ulogeado.getNombre().toString(),Toast.LENGTH_SHORT).show();
+
+        txtUsername.setText(usuario);
 
     }
 

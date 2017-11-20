@@ -188,7 +188,8 @@ public class RegisterDenunciaActivity extends AppCompatActivity {
                         Log.d(TAG, "responseMessage: " + responseMessage);
 
                         Toast.makeText(RegisterDenunciaActivity.this, responseMessage.getMessage(), Toast.LENGTH_LONG).show();
-                        finish();
+                        Intent list = new Intent(RegisterDenunciaActivity.this,ListDenunciasActivity.class);
+                        startActivity(list);
 
                     } else {
                         Log.e(TAG, "onError: " + response.errorBody().string());

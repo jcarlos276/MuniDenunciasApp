@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Titulo"/>
+        android:text="@string/titulo"/>
 
     <EditText
         android:id="@+id/titulo_input"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Comentario"/>
+        android:text="@string/comentario"/>
 
     <EditText
         android:id="@+id/comentario_input"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Latitud"/>
+        android:text="@string/latitud"/>
 
     <EditText
         android:id="@+id/latitud_input"
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Longitud"/>
+        android:text="@string/longitudReg"/>
 
     <EditText
         android:id="@+id/longitud_input"

@@ -1,6 +1,8 @@
 package app.guillen.com.munidenunciasapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,11 +34,15 @@ public class ListDenunciasActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView denunciasList;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_denuncias);
+
+        // init SharedPreferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Setear Toolbar como action bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,6 +62,8 @@ public class ListDenunciasActivity extends AppCompatActivity {
                 // Do action by menu item id
                 switch (menuItem.getItemId()){
                     case R.id.nav_profile:
+                        Intent perfil = new Intent(ListDenunciasActivity.this,HomeActivity.class);
+                        startActivity(perfil);
                         Toast.makeText(ListDenunciasActivity.this, "Perfil...", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_denuncias:
@@ -63,8 +71,18 @@ public class ListDenunciasActivity extends AppCompatActivity {
                         startActivity(denuncias);
                         break;
                     case R.id.nav_registrar_denuncia:
-                        Toast.makeText(ListDenunciasActivity.this, "Consulta estado de tickets...", Toast.LENGTH_SHORT).show();
+                        Intent registro = new Intent(ListDenunciasActivity.this,RegisterDenunciaActivity.class);
+                        startActivity(registro);
                         break;
+                    case R.id.nav_logout:
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        boolean success = editor
+                                .putString("username", null)
+                                .putBoolean("islogged", false)
+                                .commit();
+                        Intent main = new Intent(ListDenunciasActivity.this,MainActivity.class);
+                        startActivity(main);
+                        finish();
                 }
 
                 // Close drawer

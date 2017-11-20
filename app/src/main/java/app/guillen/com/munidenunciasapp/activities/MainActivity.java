@@ -2,6 +2,7 @@ package app.guillen.com.munidenunciasapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     EditText username;
     EditText password;
     Button btnLogin;
+    SharedPreferences sharedPreferences;
 
 
     @Override
@@ -41,6 +43,22 @@ public class MainActivity extends AppCompatActivity {
                 login(v);
             }
         });
+
+        // init SharedPreferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // username remember
+        String userName = sharedPreferences.getString("username", null);
+        if(username != null){
+            username.setText(userName);
+            password.requestFocus();
+        }
+
+        // islogged remember
+        if(sharedPreferences.getBoolean("islogged", false)){
+            // Go to Dashboard
+            goHome();
+        }
     }
 
     public void login(View view){
@@ -65,9 +83,18 @@ public class MainActivity extends AppCompatActivity {
                         ResponseMessage responseMessage = response.body();
                         Log.d(TAG, "responseMessage: " + responseMessage);
                         Toast.makeText(MainActivity.this, "Bienvenido "+ user, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MainActivity.this,HomeActivity.class);
-                        intent.putExtra("username",user);
-                        startActivity(intent);
+
+                        // Save to SharedPreferences
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        boolean success = editor
+                                .putString("username", user)
+                                .putBoolean("islogged", true)
+                                .commit();
+
+                        // Go to Dashboard
+                        goHome();
+
+
                     } else {
                         //progressDialog.dismiss();
                         Log.e(TAG, "onError: " + response.errorBody().string());
@@ -91,6 +118,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    private void goHome(){
+        Intent intent = new Intent(MainActivity.this,ListDenunciasActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
